@@ -4,8 +4,10 @@ import (
 	"bytes"
 	"fmt"
 	"strings"
+	"unsafe"
 )
 
+// concat the same string n times
 func plusConcat(n int, str string) string {
 	s := ""
 	for i := 0; i < n; i++ {
@@ -49,7 +51,15 @@ func byteConcat(n int, str string) string {
 func preByteConcat(n int, str string) string {
 	buf := make([]byte, 0, n*len(str))
 	for i := 0; i < n; i++ {
-		buf = append(buf, str...)
+		buf = append(buf, str...) // compiler optimize no copy
+	}
+	return string(buf)
+}
+
+func preByteNoCopyConcat(n int, str string) string {
+	buf := make([]byte, 0, n*len(str))
+	for i := 0; i < n; i++ {
+		buf = append(buf, *(*[]byte)(unsafe.Pointer(&str))...) // no copy
 	}
 	return string(buf)
 }
