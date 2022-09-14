@@ -51,7 +51,7 @@ func byteConcat(n int, str string) string {
 func preByteConcat(n int, str string) string {
 	buf := make([]byte, 0, n*len(str))
 	for i := 0; i < n; i++ {
-		buf = append(buf, str...) // compiler optimize no copy
+		buf = append(buf, str...) // compiler optimize no copy TODO to prove it
 	}
 	return string(buf)
 }
@@ -61,5 +61,5 @@ func preByteNoCopyConcat(n int, str string) string {
 	for i := 0; i < n; i++ {
 		buf = append(buf, *(*[]byte)(unsafe.Pointer(&str))...) // no copy
 	}
-	return string(buf)
+	return *(*string)(unsafe.Pointer(&buf)) //no copy
 }
